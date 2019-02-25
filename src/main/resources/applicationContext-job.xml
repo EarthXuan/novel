@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:jee="http://www.springframework.org/schema/jee"
+	   xmlns:tx="http://www.springframework.org/schema/tx" xmlns:context="http://www.springframework.org/schema/context"
+	   xmlns:aop="http://www.springframework.org/schema/aop"
+	   xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-2.5.xsd http://www.springframework.org/schema/jee http://www.springframework.org/schema/jee/spring-jee-2.5.xsd http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-2.5.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-2.5.xsd"
+	   default-lazy-init="false">
+
+	<!-- JobDetail模板 -->
+	<bean id="jobDetailParent" abstract="true">
+		<property name="targetMethod" value="scan"/>
+	</bean>
+	<!-- 执行需要定时执行的任务加入这里 -->
+	<bean class="org.springframework.scheduling.quartz.SchedulerFactoryBean" lazy-init="default">
+		<property name="triggers">
+			<list>
+				<ref bean="ScanNovelTrigger"/>
+			</list>
+		</property>
+	</bean>
+	<bean id="ScanNovelTrigger" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+		<property name="jobDetail" ref="ScanNovel"/>
+		<property name="cronExpression" value="0 0/1 * * * ?"/><!-- 每5分钟执行一次   -->
+		<!--<property name="cronExpression" value="0 0 /12 * * ? *"/>--><!-- 每12小时执行一次   -->
+	</bean>
+	<bean id="ScanNovel" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean" parent="jobDetailParent">
+		<property name="targetObject" ref="scanNovelService"/>
+	</bean>
+</beans>
