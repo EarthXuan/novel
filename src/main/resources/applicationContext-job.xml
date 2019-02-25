@@ -20,7 +20,7 @@
 	</bean>
 	<bean id="ScanNovelTrigger" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
 		<property name="jobDetail" ref="ScanNovel"/>
-		<property name="cronExpression" value="0 0/1 * * * ?"/><!-- 每5分钟执行一次   -->
+		<property name="cronExpression" value="0 0/5 * * * ?"/><!-- 每5分钟执行一次   -->
 		<!--<property name="cronExpression" value="0 0 /12 * * ? *"/>--><!-- 每12小时执行一次   -->
 	</bean>
 	<bean id="ScanNovel" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean" parent="jobDetailParent">

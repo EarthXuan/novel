@@ -51,6 +51,7 @@ public class ScanNovelServiceImpl implements ScanNovelService {
                             break;
                         String[] val = ((String)object).split(",");
                         System.out.println(Thread.currentThread().getName() + "i:" + val[0] + "," + val[1]);
+                        scanChapter(val[0],val[1]);
                     }
                 }
             });
@@ -58,8 +59,31 @@ public class ScanNovelServiceImpl implements ScanNovelService {
 
     }
 
-    public static void main(String[] args) {
-
+    public void scanChapter(String url,String name){
+        Document document = null;
+        try {
+            document = Jsoup.connect(url.contains("http://www.xbiquge.la")?url:("http://www.xbiquge.la"+url)).get();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        Element listElement=document.getElementById("list");
+        List<Element> list=listElement.getElementsByTag("a");
+        for(Element element:list){
+            System.out.println(name+":"+element.attr("href")+","+element.text());
+            scanContent(element.attr("href"),element.text());
+        }
     }
+
+    public void scanContent(String url,String name){
+        Document document = null;
+        try {
+            document = Jsoup.connect(url.contains("http://www.xbiquge.la")?url:("http://www.xbiquge.la"+url)).get();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        Element contentElement=document.getElementById("content");
+            System.out.println(name+":"+contentElement.text());
+    }
+
 }
 
