@@ -14,7 +14,7 @@
 	<bean class="org.springframework.scheduling.quartz.SchedulerFactoryBean" lazy-init="default">
 		<property name="triggers">
 			<list>
-				<ref bean="ScanNovelTrigger"/>
+				<!--<ref bean="ScanNovelTrigger"/>-->
 			</list>
 		</property>
 	</bean>
